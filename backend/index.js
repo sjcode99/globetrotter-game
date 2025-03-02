@@ -135,6 +135,18 @@ app.get("/score", async (req, res) => {
   }
   res.json(user);
 });
+// GET /score - Fetch user score
+app.post("/getUserById", async (req, res) => {
+  const { referralCode} = req.body;
+
+  const user = await User.findOne({ referralCode });
+  console.log(user);
+
+  if (!user) {
+    return res.status(400).json({ error: "Incorrect referral code" });
+  }
+  res.json(user);
+});
 
 // Helper function to shuffle choices
 const shuffleArray = (array) => {
