@@ -39,7 +39,7 @@ export default function GlobetrotterGame() {
   }, []);
 
   const getAllQuestions = async () => {
-    const fetchData = await fetch("http://localhost:5000/questions");
+    const fetchData = await fetch(`${process.env.BACKEND_URL}/questions`);
     const jsonData = await fetchData.json();
     setDataset(jsonData);
   };
@@ -51,7 +51,7 @@ export default function GlobetrotterGame() {
       return;
     }
 
-    const response = await fetch("http://localhost:5000/register", {
+    const response = await fetch(`${process.env.BACKEND_URL}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username }),
@@ -104,14 +104,14 @@ export default function GlobetrotterGame() {
 
   const fetchScore = async () => {
     const response = await fetch(
-      `http://localhost:5000/score?username=${username}`
+      `${process.env.BACKEND_URL}/score?username=${username}`
     );
     const data = await response.json();
     setScore(data);
   };
 
   const getUserByReferralID = async (referralCode) => {
-    const response = await fetch(`http://localhost:5000/getUserById`, {
+    const response = await fetch(`${process.env.BACKEND_URL}/getUserById`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -131,7 +131,7 @@ export default function GlobetrotterGame() {
   const handleSubmit = async () => {
     if (!selectedAnswer) return;
 
-    const response = await fetch("http://localhost:5000/submit-answer", {
+    const response = await fetch(`${process.env.BACKEND_URL}/submit-answer`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
