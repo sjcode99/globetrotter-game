@@ -13,8 +13,6 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
-let db, questionCollection;
-
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -24,18 +22,15 @@ mongoose
   })
   .then((client) => {
     console.log("MongoDB Connected");
-    // db = client.db('globe-game');
-    // questionCollection = db.collection('questions'); // Define collection
   })
   .catch((err) => console.error(err));
 
 function generateReferralCode() {
   return uuidv4().slice(0, 4); // Shortened unique code
 }
-let users = {}; // Store user profiles with scores
 
 app.post("/register", async (req, res) => {
-  const { username, email, referralCode } = req.body;
+  const { username, referralCode } = req.body;
 
   try {
     // Check if the username is already used
@@ -81,33 +76,6 @@ app.get("/questions", async (req, res) => {
   }
 });
 
-// POST /register - Register a new user
-// app.post("/register", (req, res) => {
-//   const { username } = req.body;
-//   if (!username) {
-//     return res.status(400).json({ error: "Username is required" });
-//   }
-//   if (users[username]) {
-//     return res.status(400).json({ error: "Username already taken" });
-//   }
-//   users[username] = { correct: 0, incorrect: 0 };
-//   res.json({ message: "User registered successfully", username });
-// });
-
-// GET /get-clue - Fetch a random question with choices
-// app.get("/get-clue", (req, res) => {
-//   const randomIndex = Math.floor(Math.random() * dataset.length);
-//   const question = dataset[randomIndex];
-//   const incorrectOptions = dataset
-//     .filter((q) => q.city !== question.city)
-//     .map((q) => q.city);
-//   const options = shuffleArray([
-//     question.city,
-//     ...incorrectOptions.slice(0, 3),
-//   ]);
-//   res.json({ clue: question.clues[0], options, correctAnswer: question.city });
-// });
-
 // POST /submit-answer - Validate answer and update score
 app.post("/submit-answer", async(req, res) => {
   const { username, answer, correctAnswer } = req.body;
@@ -135,6 +103,7 @@ app.get("/score", async (req, res) => {
   }
   res.json(user);
 });
+
 // GET /score - Fetch user score
 app.post("/getUserById", async (req, res) => {
   const { referralCode} = req.body;
@@ -147,11 +116,6 @@ app.post("/getUserById", async (req, res) => {
   }
   res.json(user);
 });
-
-// Helper function to shuffle choices
-const shuffleArray = (array) => {
-  return array.sort(() => Math.random() - 0.5);
-};
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

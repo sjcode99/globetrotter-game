@@ -20,7 +20,6 @@ export default function GlobetrotterGame() {
   const [friendUsername, setFriendUsername] = useState(null);
   const [dataset, setDataset] = useState([]);
   const [referredUser, setReferredUser] = useState(null);
-  const [showChallenge, setShowChallenge] = useState(false);
 
   useEffect(() => {
     if (isRegistered) {
@@ -103,11 +102,6 @@ export default function GlobetrotterGame() {
     return array.sort(() => Math.random() - 0.5);
   };
 
-  const handleAnswer = (answer) => {
-    setSelectedAnswer(answer);
-    setIsCorrect(answer === question.correctAnswer);
-  };
-
   const fetchScore = async () => {
     const response = await fetch(
       `http://localhost:5000/score?username=${username}`
@@ -125,9 +119,7 @@ export default function GlobetrotterGame() {
       }),
     });
     const data = await response.json();
-    console.log(data);
     setReferredUser(data);
-    // setScore(data);
   };
 
   const handleOptionClick = (option) => {
@@ -162,11 +154,7 @@ export default function GlobetrotterGame() {
       return;
     }
     const link = `${window.location.origin}?refer=${score.referralCode}`;
-    // getUserByReferralID(username);
-
     setInviteLink(link);
-    // const message = `Hey! Join me in playing Globetrotter Challenge. My score: ${score.correct} correct, ${score.incorrect} incorrect. Click to play: ${link}`;
-    // window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`);
   };
 
   // if (!question) return <div>Loading...</div>;
@@ -176,18 +164,6 @@ export default function GlobetrotterGame() {
       <div className="flex flex-col items-center justify-center min-h-screen bg-blue-50 p-4">
         <div className="w-full max-w-md bg-white text-center p-6 rounded-lg shadow-lg">
           <h1 className="text-2xl font-bold">🌍 Globetrotter Challenge</h1>
-          {/* referral friend container */}
-
-          {/* {referredUser && (
-            <div>
-              <p>you have been invited by {referredUser.username} </p>
-              <p>
-                {referredUser.username} answered {referredUser.correct} correct
-                answers and {referredUser.incorrect} incorrect answers
-              </p>
-              <p>Test yours Knowledge!!</p>
-            </div>
-          )} */}
 
           {/* Referral Friend Container */}
           {referredUser && (
@@ -253,7 +229,7 @@ export default function GlobetrotterGame() {
           <input
             type="text"
             placeholder="Enter your username"
-            value={friendUsername}
+            value={friendUsername || ""}
             onChange={(e) => setFriendUsername(e.target.value)}
             className="p-2 border border-gray-300 rounded-md text-center w-64"
           />
@@ -334,18 +310,6 @@ export default function GlobetrotterGame() {
             >
               {option}
             </button>
-            // <button
-            //     key={index}
-            //     onClick={() => handleAnswer(option)}
-            //     className={`p-3 rounded-md font-medium transition-all duration-300 ${selectedAnswer === option
-            //             ? isCorrect
-            //                 ? "bg-green-500 text-white scale-110"
-            //                 : "bg-red-500 text-white shake"
-            //             : "bg-gray-200 hover:bg-gray-300"
-            //         }`}
-            // >
-            //     {option}
-            // </button>
           ))}
         </div>
         {isCorrect !== null && isCorrect ? (
